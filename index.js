@@ -88,7 +88,7 @@ function createTypes(types, ul) {
         typeLi.style.fontSize = '80%';
         typeLi.style.textShadow = '0px 2px 2px rgba(0, 0, 0, 0.5)';
         typeLi.style.width = '45%';
-        typeLi.style.marginLeft = '27.5 %';
+        typeLi.style.marginLeft = '27.5%';
         typeLi.style.color = 'white';
         typeLi.style.backgroundColor = getTypeColor(typeName);
         typeLi.style.fontWeight = 'bold';
