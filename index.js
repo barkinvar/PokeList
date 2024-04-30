@@ -51,7 +51,7 @@ function renderPokemon(pokeData) {
     pokeContainer.addEventListener("click", function() {
         window.open("https://pokemondb.net/pokedex/" + pokeData.id);
     });
-    
+
     createPokeImage(pokeData.id, pokeContainer);
 
     let pokeName = document.createElement('h4');
@@ -82,10 +82,44 @@ function renderPokemon(pokeData) {
 
 function createTypes(types, ul) {
     types.forEach(function (type) {
-        let typeLi = document.createElement('li');
-        typeLi.innerText = type['type']['name'];
-        ul.append(typeLi)
-    })
+        let typeLi = document.createElement('p');
+        let typeName = type['type']['name'];
+        typeLi.textContent = typeName.toUpperCase();
+        typeLi.style.fontSize = '80%';
+        typeLi.style.textShadow = '0px 2px 2px rgba(0, 0, 0, 0.5)';
+        typeLi.style.width = '45%';
+        typeLi.style.marginLeft = '27.5 %';
+        typeLi.style.color = 'white';
+        typeLi.style.backgroundColor = getTypeColor(typeName);
+        typeLi.style.fontWeight = 'bold';
+        typeLi.style.border = '1px solid black'; // Adding black border
+        typeLi.style.borderRadius = '5px'; // Rounding the border
+        ul.append(typeLi);
+    });
+}
+
+function getTypeColor(typeName) {
+    const typeColors = {
+        normal: '#A8A77A',
+        fire: '#EE8130',
+        water: '#6390F0',
+        electric: '#F7D02C',
+        grass: '#7AC74C',
+        ice: '#96D9D6',
+        fighting: '#C22E28',
+        poison: '#A33EA1',
+        ground: '#E2BF65',
+        flying: '#A98FF3',
+        psychic: '#F95587',
+        bug: '#A6B91A',
+        rock: '#B6A136',
+        ghost: '#735797',
+        dragon: '#6F35FC',
+        dark: '#705746',
+        steel: '#B7B7CE',
+        fairy: '#D685AD'
+    };
+    return typeColors[typeName] || '#000000';
 }
 
 function createPokeImage(pokeID, containerDiv) {
