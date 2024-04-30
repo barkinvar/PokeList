@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>PokeList</title>
+    <script src="index.js"></script>
+    <link rel="stylesheet" href="index.css">
+</head>
+
+<body>
+    <audio id="bgAudio" loop>
+        <source src="bg.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+    <div id="container">
+        <h1 id="header-text">Pokemon Gotta Catch ‘Em All!</h1>
+        <div id="poke-container" class="ui cards">
+            <!-- will hold the cards for all the pokemon -->
+            <button id="generate-pokemon" class="ui secondary button">Generate Pokemon</button>
+        </div>
+    </div>
+    <div id="delete-container">
+        <button id="delete-btn" class="ui red button">Delete</button>
+    </div>
+    <footer id="creator">
+        <p>Created by Barkın Var</p>
+    </footer>
+</body>
+
+</html>
