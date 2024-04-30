@@ -48,6 +48,10 @@ function renderPokemon(pokeData) {
     let pokeContainer = document.createElement("div");
     pokeContainer.classList.add('ui', 'card');
 
+    pokeContainer.addEventListener("click", function() {
+        window.open("https://pokemondb.net/pokedex/" + pokeData.id);
+    });
+    
     createPokeImage(pokeData.id, pokeContainer);
 
     let pokeName = document.createElement('h4');
@@ -55,6 +59,7 @@ function renderPokemon(pokeData) {
 
     let pokeNumber = document.createElement('p');
     pokeNumber.innerText = `#${pokeData.id}`;
+
 
     pokeContainer.append(pokeName, pokeNumber);
     createTypes(pokeData.types, pokeContainer);
