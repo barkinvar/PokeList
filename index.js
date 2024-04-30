@@ -24,52 +24,55 @@ function getDeleteBtn() {
     return document.querySelector('#delete-btn')
 }
 
-async function fetchKantoPokemon() {
-    try {
-        const response = await fetch('https://pokeapi.co/api/v2/pokemon?limit=905');
-        const allpokemon = await response.json();
-        console.log(allpokemon);
-        
-        for (const pokemon of allpokemon.results) {
-            await fetchPokemonData(pokemon);
-        }
-    } catch (error) {
-        console.error('Error fetching data:', error);
-    }
+function fetchKantoPokemon() {
+    fetch('https://pokeapi.co/api/v2/pokemon?limit=905')
+        .then(response => response.json())
+        .then(function (allpokemon) {
+            allpokemon.results.forEach(function (pokemon) {
+                fetchPokemonData(pokemon);
+            })
+        })
 }
 
-async function fetchPokemonData(pokemon) {
-    try {
-        let url = pokemon.url;
-        const response = await fetch(url);
-        const pokeData = await response.json();
-        renderPokemon(pokeData);
-    } catch (error) {
-        console.error('Error fetching pokemon data:', error);
-    }
+function fetchPokemonData(pokemon) {
+    let url = pokemon.url;
+    fetch(url)
+        .then(response => response.json())
+        .then(function (pokeData) {
+            renderPokemon(pokeData)
+        })
 }
 
 function renderPokemon(pokeData) {
     let allPokemonContainer = document.getElementById('poke-container');
-    let pokeContainer = document.createElement("div")
+    let pokeContainer = document.createElement("div");
     pokeContainer.classList.add('ui', 'card');
-
-    pokeContainer.addEventListener("click", function() {
-        window.open("https://pokemondb.net/pokedex/" + pokeData.id);
-    });
 
     createPokeImage(pokeData.id, pokeContainer);
 
-    let pokeName = document.createElement('h4')
-    pokeName.innerText = pokeData.name
-    pokeName.innerText = pokeName.innerText.charAt(0).toUpperCase() + pokeName.innerText.slice(1);
+    let pokeName = document.createElement('h4');
+    pokeName.innerText = pokeData.name.charAt(0).toUpperCase() + pokeData.name.slice(1);
 
-    let pokeNumber = document.createElement('p')
-    pokeNumber.innerText = `#${pokeData.id}`
+    let pokeNumber = document.createElement('p');
+    pokeNumber.innerText = `#${pokeData.id}`;
 
     pokeContainer.append(pokeName, pokeNumber);
-    createTypes(pokeData.types, pokeContainer)
-    allPokemonContainer.appendChild(pokeContainer);
+    createTypes(pokeData.types, pokeContainer);
+
+    // Check the position based on ID
+    let inserted = false;
+    for (let i = 0; i < allPokemonContainer.children.length; i++) {
+        let existingPokemon = allPokemonContainer.children[i];
+        let existingPokemonID = parseInt(existingPokemon.querySelector('p').innerText.substring(1));
+        if (pokeData.id < existingPokemonID) {
+            allPokemonContainer.insertBefore(pokeContainer, existingPokemon);
+            inserted = true;
+            break;
+        }
+    }
+    if (!inserted) {
+        allPokemonContainer.appendChild(pokeContainer);
+    }
 }
 
 function createTypes(types, ul) {
