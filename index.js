@@ -36,29 +36,55 @@ async function fetchPokemonData(pokemon) {
 }
 
 function renderPokemon(pokeData) {
-    const allPokemonContainer = document.getElementById('poke-container');
-    const pokeContainer = document.createElement("div");
-    pokeContainer.classList.add('ui', 'card');
+    const pokeContainer = createPokeContainer(pokeData);
+    insertPokemonInOrder(pokeContainer, pokeData.id, document.getElementById('poke-container'));
+}
 
-    pokeContainer.addEventListener("click", () => {
+function createPokeContainer(pokeData) {
+    const container = document.createElement("div");
+    container.classList.add('ui', 'card');
+    container.addEventListener("click", () => {
         window.open(`https://pokemondb.net/pokedex/${pokeData.id}`);
     });
 
-    createPokeImage(pokeData.id, pokeContainer);
+    container.appendChild(createPokeImage(pokeData.id));
+    container.appendChild(createPokeName(pokeData.name));
+    container.appendChild(createPokeNumber(pokeData.id));
+    container.appendChild(createTypes(pokeData.types));
 
-    const pokeName = document.createElement('h4');
-    pokeName.innerText = capitalizeFirstLetter(pokeData.name);
-
-    const pokeNumber = document.createElement('p');
-    pokeNumber.innerText = `#${pokeData.id}`;
-
-    pokeContainer.append(pokeName, pokeNumber);
-    createTypes(pokeData.types, pokeContainer);
-
-    insertPokemonInOrder(pokeContainer, pokeData.id, allPokemonContainer);
+    return container;
 }
 
-function createTypes(types, container) {
+function createPokeImage(pokeID) {
+    const pokeImgContainer = document.createElement('div');
+    pokeImgContainer.classList.add('image');
+
+    const pokeImage = document.createElement('img');
+    pokeImage.srcset = `https://raw.githubusercontent.com/HybridShivam/Pokemon/master/assets/images/${convertToPaddedString(pokeID, 3)}.png`;
+    pokeImage.style.cssText = `
+        width: 80%;
+        height: 80%;
+        padding-top: 20px;
+    `;
+
+    pokeImgContainer.appendChild(pokeImage);
+    return pokeImgContainer;
+}
+
+function createPokeName(name) {
+    const pokeName = document.createElement('h4');
+    pokeName.innerText = capitalizeFirstLetter(name);
+    return pokeName;
+}
+
+function createPokeNumber(id) {
+    const pokeNumber = document.createElement('p');
+    pokeNumber.innerText = `#${id}`;
+    return pokeNumber;
+}
+
+function createTypes(types) {
+    const typesContainer = document.createElement('div');
     types.forEach(type => {
         const typeName = type.type.name;
         const typeLi = document.createElement('p');
@@ -74,8 +100,9 @@ function createTypes(types, container) {
             border: 1px solid black;
             border-radius: 5px;
         `;
-        container.append(typeLi);
+        typesContainer.appendChild(typeLi);
     });
+    return typesContainer;
 }
 
 function getTypeColor(typeName) {
@@ -100,22 +127,6 @@ function getTypeColor(typeName) {
         fairy: '#D685AD'
     };
     return typeColors[typeName] || '#000000';
-}
-
-function createPokeImage(pokeID, containerDiv) {
-    const pokeImgContainer = document.createElement('div');
-    pokeImgContainer.classList.add('image');
-
-    const pokeImage = document.createElement('img');
-    pokeImage.srcset = `https://raw.githubusercontent.com/HybridShivam/Pokemon/master/assets/images/${convertToPaddedString(pokeID, 3)}.png`;
-    pokeImage.style.cssText = `
-        width: 80%;
-        height: 80%;
-        padding-top: 20px;
-    `;
-
-    pokeImgContainer.append(pokeImage);
-    containerDiv.append(pokeImgContainer);
 }
 
 function convertToPaddedString(number, paddingLength) {
