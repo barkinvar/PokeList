@@ -10,6 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function renderEverything() {
+
     const allPokemonContainer = document.querySelector('#poke-container');
     allPokemonContainer.innerText = "";
     fetchPokemon().catch(error => console.error("Failed to fetch Kanto Pokémon:", error));
@@ -69,8 +70,6 @@ function createPokeImage(pokeID) {
         height: 90%;
         padding-top: 20px;
     `;
-    pokeImage.loading = 'lazy';
-
     pokeImgContainer.appendChild(pokeImage);
     return pokeImgContainer;
 }
