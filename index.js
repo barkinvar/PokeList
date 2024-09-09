@@ -68,8 +68,7 @@ function createPokeImage(pokeID) {
     const pokeImage = document.createElement('img');
     pokeImage.srcset = `https://raw.githubusercontent.com/HybridShivam/Pokemon/master/assets/images/${convertToPaddedString(pokeID, 3)}.png`;
     pokeImage.style.cssText = `
-        width: 80%;
-        height: 80%;
+        height: 90%;
         padding-top: 20px;
     `;
 
