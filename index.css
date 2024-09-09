@@ -1,6 +1,45 @@
-body
-{
+body {
     background-color: rgb(191, 192, 185);
+    font-family: Arial, sans-serif; /* Ensuring a consistent font */
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    text-align: center;
+    padding: 20px;
+}
+
+#header-text {
+    color: white;
+    text-shadow: 0px 0px 3px black;
+    margin: 0;
+}
+
+#search-container {
+    margin: 20px auto;
+    max-width: 600px; /* Limits the width of the search bar */
+}
+
+#search {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 2px solid #333;
+    border-radius: 5px;
+    box-sizing: border-box; /* Ensures padding and border are included in the width */
+}
+
+#search:focus {
+    border-color: #333; /* Keeps the border color the same when focused */
+    background-color: rgb(243, 243, 243); /* Keeps the background color the same when focused */
+    color: #333; /* Keeps the text color the same when focused */
+    box-shadow: none; /* Removes any default box-shadow applied on focus */
+    outline: none;
 }
 
 #container {
@@ -13,44 +52,36 @@ body
     display: flex;
     justify-content: center; /* Center horizontally */
     align-items: center; /* Center vertically */
-    width: 100%; /* Take up full height of viewport */
+    width: 100%;
     flex-wrap: wrap;
     flex-direction: row;
 }
 
 footer {
-  background-color: #333;
-  color: #fff;
-  padding-bottom: 0.1%;
-  text-align: center;
-  position: fixed;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  height: 5%;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: auto; /* Adjusted height to fit content */
 }
 
-html, body {
-    height: 100%;
-    margin: 0;
-    padding: 0;
-  }
-
 .ui.card {
-    background-color:rgb(243, 243, 243);
+    background-color: rgb(243, 243, 243);
     transition: background-color 0.5s ease;
-    border: 1px solid #000; /* Black border with 1px width */
-    border-radius: 5px; /* Rounded corners with a radius of 5px */
-    /* Additional styles */
-    padding: 10px; /* Add padding for spacing */
-    margin: 10px; /* Add margin for spacing */
+    border: 1px solid #000;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 10px;
     text-align: center;
     height: 300px;
     width: 200px;
 }
 
 .ui.card:hover {
-    background-color:rgb(124, 124, 124);
+    background-color: rgb(124, 124, 124);
 }
 
 .image {
@@ -58,17 +89,9 @@ html, body {
     width: 100%;
 }
 
-#header-container {
-    border-radius: 0px !important;
-}
-
-#header-text{
-    margin: 0 auto;
-}
-
 h1 {
     text-align: center;
     color: white;
     text-shadow: 0px 0px 3px black;
     padding: 20px;
-  }
+}

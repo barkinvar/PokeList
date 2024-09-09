@@ -6,8 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>PokeList</title>
-    <script src="index.js"></script>
     <link rel="stylesheet" href="index.css">
+    <script src="index.js" defer></script>
 </head>
 
 <body>
@@ -15,10 +15,15 @@
         <source src="bg.mp3" type="audio/mpeg">
         Your browser does not support the audio element.
     </audio>
-    <div id="container">
+    <header>
         <h1 id="header-text">Pokemon Gotta Catch ‘Em All!</h1>
+        <div id="search-container">
+            <input type="text" id="search" placeholder="Search Pokémon...">
+        </div>
+    </header>
+    <div id="container">
         <div id="poke-container" class="ui cards">
-            <!-- will hold the cards for all the pokemon -->
+            <!-- Pokémon cards will be added here dynamically -->
         </div>
     </div>
     <footer id="creator">

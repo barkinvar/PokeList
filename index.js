@@ -3,6 +3,9 @@ document.addEventListener("DOMContentLoaded", () => {
     footer.addEventListener("click", () => {
         window.open("https://github.com/barkinvar");
     });
+
+        const searchInput = document.getElementById('search');
+    searchInput.addEventListener('input', filterPokemons);
     renderEverything();
 });
 
@@ -43,6 +46,9 @@ function renderPokemon(pokeData) {
 function createPokeContainer(pokeData) {
     const container = document.createElement("div");
     container.classList.add('ui', 'card');
+    container.dataset.pokeNumber = pokeData.id; // Store Pokémon number as a data attribute
+    container.dataset.pokeName = pokeData.name.toLowerCase(); // Store Pokémon name in lowercase for easier searching
+
     container.addEventListener("click", () => {
         window.open(`https://pokemondb.net/pokedex/${pokeData.id}`);
     });
@@ -153,4 +159,26 @@ function insertPokemonInOrder(pokeContainer, pokeID, allPokemonContainer) {
     if (!inserted) {
         allPokemonContainer.appendChild(pokeContainer);
     }
+}
+
+function filterPokemons() {
+    const searchText = document.getElementById('search').value.trim().toLowerCase();
+
+    const allPokemonContainer = document.getElementById('poke-container');
+    const pokeContainers = allPokemonContainer.querySelectorAll('.ui.card');
+
+    pokeContainers.forEach(container => {
+        const pokeName = container.dataset.pokeName;
+        const pokeNumber = container.dataset.pokeNumber;
+
+        // Check if the search text matches the Pokémon name or number
+        const nameMatches = pokeName.includes(searchText);
+        const numberMatches = pokeNumber.startsWith(searchText);
+
+        if (nameMatches || numberMatches) {
+            container.style.display = 'block';
+        } else {
+            container.style.display = 'none';
+        }
+    });
 }
