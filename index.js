@@ -1,100 +1,80 @@
 document.addEventListener("DOMContentLoaded", () => {
-    let generateBtn = document.querySelector('#generate-pokemon');
-    generateBtn.addEventListener('click', renderEverything)
-
-    getDeleteBtn().addEventListener('click', deleteEverything);
-
-    let footer = document.getElementById('creator');
-    footer.addEventListener("click", function() {
+    const footer = document.getElementById('creator');
+    footer.addEventListener("click", () => {
         window.open("https://github.com/barkinvar");
     });
-})
+    renderEverything();
+});
 
 function renderEverything() {
-    var bgAudio = document.getElementById("bgAudio");
+    const bgAudio = document.getElementById("bgAudio");
     bgAudio.play();
-    let allPokemonContainer = document.querySelector('#poke-container')
+    const allPokemonContainer = document.querySelector('#poke-container');
     allPokemonContainer.innerText = "";
-    fetchKantoPokemon();
-
-    getDeleteBtn().style.display = 'block'
+    fetchPokemon().catch(error => console.error("Failed to fetch Kanto Pokémon:", error));
 }
 
-function getDeleteBtn() {
-    return document.querySelector('#delete-btn')
+async function fetchPokemon() {
+    try {
+        const response = await fetch('https://pokeapi.co/api/v2/pokemon?limit=905');
+        const data = await response.json();
+        const pokemonPromises = data.results.map(pokemon => fetchPokemonData(pokemon));
+        await Promise.all(pokemonPromises);
+    } catch (error) {
+        console.error("Error fetching Kanto Pokémon:", error);
+    }
 }
 
-function fetchKantoPokemon() {
-    fetch('https://pokeapi.co/api/v2/pokemon?limit=905')
-        .then(response => response.json())
-        .then(function (allpokemon) {
-            allpokemon.results.forEach(function (pokemon) {
-                fetchPokemonData(pokemon);
-            })
-        })
-}
-
-function fetchPokemonData(pokemon) {
-    let url = pokemon.url;
-    fetch(url)
-        .then(response => response.json())
-        .then(function (pokeData) {
-            renderPokemon(pokeData)
-        })
+async function fetchPokemonData(pokemon) {
+    try {
+        const response = await fetch(pokemon.url);
+        const pokeData = await response.json();
+        renderPokemon(pokeData);
+    } catch (error) {
+        console.error(`Error fetching Pokémon data for ${pokemon.name}:`, error);
+    }
 }
 
 function renderPokemon(pokeData) {
-    let allPokemonContainer = document.getElementById('poke-container');
-    let pokeContainer = document.createElement("div");
+    const allPokemonContainer = document.getElementById('poke-container');
+    const pokeContainer = document.createElement("div");
     pokeContainer.classList.add('ui', 'card');
 
-    pokeContainer.addEventListener("click", function() {
-        window.open("https://pokemondb.net/pokedex/" + pokeData.id);
+    pokeContainer.addEventListener("click", () => {
+        window.open(`https://pokemondb.net/pokedex/${pokeData.id}`);
     });
 
     createPokeImage(pokeData.id, pokeContainer);
 
-    let pokeName = document.createElement('h4');
-    pokeName.innerText = pokeData.name.charAt(0).toUpperCase() + pokeData.name.slice(1);
+    const pokeName = document.createElement('h4');
+    pokeName.innerText = capitalizeFirstLetter(pokeData.name);
 
-    let pokeNumber = document.createElement('p');
+    const pokeNumber = document.createElement('p');
     pokeNumber.innerText = `#${pokeData.id}`;
-
 
     pokeContainer.append(pokeName, pokeNumber);
     createTypes(pokeData.types, pokeContainer);
 
-    // Check the position based on ID
-    let inserted = false;
-    for (let i = 0; i < allPokemonContainer.children.length; i++) {
-        let existingPokemon = allPokemonContainer.children[i];
-        let existingPokemonID = parseInt(existingPokemon.querySelector('p').innerText.substring(1));
-        if (pokeData.id < existingPokemonID) {
-            allPokemonContainer.insertBefore(pokeContainer, existingPokemon);
-            inserted = true;
-            break;
-        }
-    }
-    if (!inserted) {
-        allPokemonContainer.appendChild(pokeContainer);
-    }
+    insertPokemonInOrder(pokeContainer, pokeData.id, allPokemonContainer);
 }
 
-function createTypes(types, ul) {
-    types.forEach(function (type) {
-        let typeLi = document.createElement('p');
-        let typeName = type['type']['name'];
+function createTypes(types, container) {
+    types.forEach(type => {
+        const typeName = type.type.name;
+        const typeLi = document.createElement('p');
         typeLi.textContent = typeName.toUpperCase();
-        typeLi.style.fontSize = '80%';
-        typeLi.style.textShadow = '0px 2px 2px rgba(0, 0, 0, 0.5)';
-        typeLi.style.width = '45%';
-        typeLi.style.marginLeft = '27.5%';
-        typeLi.style.color = 'white';
-        typeLi.style.backgroundColor = getTypeColor(typeName);
-        typeLi.style.fontWeight = 'bold';
-        typeLi.style.border = '1px solid black'; // Adding black border
-        typeLi.style.borderRadius = '5px'; // Rounding the border
-        ul.append(typeLi);
+        typeLi.style.cssText = `
+            font-size: 80%;
+            text-shadow: 0px 2px 2px rgba(0, 0, 0, 0.5);
+            width: 45%;
+            margin-left: 27.5%;
+            color: white;
+            background-color: ${getTypeColor(typeName)};
+            font-weight: bold;
+            border: 1px solid black;
+            border-radius: 5px;
+        `;
+        container.append(typeLi);
     });
 }
 
@@ -123,52 +103,43 @@ function getTypeColor(typeName) {
 }
 
 function createPokeImage(pokeID, containerDiv) {
-    let pokeImgContainer = document.createElement('div')
-    pokeImgContainer.classList.add('image')
+    const pokeImgContainer = document.createElement('div');
+    pokeImgContainer.classList.add('image');
 
-
-    let pokeImage = document.createElement('img')
-    pokeImage.srcset = `https://raw.githubusercontent.com/HybridShivam/Pokemon/master/assets/images/${convertToPaddedString(pokeID,3)}.png`
-
-    pokeImage.style.width = '80%';
-    pokeImage.style.height = '80%';
-    pokeImage.style.paddingTop = '20px';
+    const pokeImage = document.createElement('img');
+    pokeImage.srcset = `https://raw.githubusercontent.com/HybridShivam/Pokemon/master/assets/images/${convertToPaddedString(pokeID, 3)}.png`;
+    pokeImage.style.cssText = `
+        width: 80%;
+        height: 80%;
+        padding-top: 20px;
+    `;
 
     pokeImgContainer.append(pokeImage);
     containerDiv.append(pokeImgContainer);
 }
 
 function convertToPaddedString(number, paddingLength) {
-    let numString = number.toString();
-    let zerosNeeded = Math.max(paddingLength - numString.length, 0);
-    let paddedString = '0'.repeat(zerosNeeded) + numString;
-
-    return paddedString;
+    return number.toString().padStart(paddingLength, '0');
 }
 
-function deleteEverything(event) {
-    event.target.style = 'none';
-    let allPokemonContainer = document.querySelector('#poke-container')
-    allPokemonContainer.innerText = ""
-
-    let generateBtn = document.createElement('button')
-    generateBtn.innerText = "Generate Pokemon"
-    generateBtn.id = 'generate-pokemon'
-    generateBtn.classList.add('ui', 'secondary', 'button')
-    generateBtn.addEventListener('click', renderEverything);
-
-    allPokemonContainer.append(generateBtn)
+function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-var colorIndex = 0;
+function insertPokemonInOrder(pokeContainer, pokeID, allPokemonContainer) {
+    const children = Array.from(allPokemonContainer.children);
+    let inserted = false;
 
-function changeColor() {
-    var button = document.querySelector('#generate-pokemon');
-    if (button != null) {
-        if (colorIndex == 0) { button.style.transform = 'scale(1.0)'; }
-        else { button.style.transform = 'scale(1.2)'; }
+    for (const existingPokemon of children) {
+        const existingPokemonID = parseInt(existingPokemon.querySelector('p').innerText.substring(1));
+        if (pokeID < existingPokemonID) {
+            allPokemonContainer.insertBefore(pokeContainer, existingPokemon);
+            inserted = true;
+            break;
+        }
     }
-    colorIndex = (colorIndex + 1) % 2;
-}
 
-setInterval(changeColor, 500);
+    if (!inserted) {
+        allPokemonContainer.appendChild(pokeContainer);
+    }
+}
