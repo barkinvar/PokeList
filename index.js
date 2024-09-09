@@ -71,6 +71,7 @@ function createPokeImage(pokeID) {
         height: 90%;
         padding-top: 20px;
     `;
+    pokeImage.loading = 'lazy';
 
     pokeImgContainer.appendChild(pokeImage);
     return pokeImgContainer;
