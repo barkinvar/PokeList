@@ -10,8 +10,6 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function renderEverything() {
-    const bgAudio = document.getElementById("bgAudio");
-    bgAudio.play();
     const allPokemonContainer = document.querySelector('#poke-container');
     allPokemonContainer.innerText = "";
     fetchPokemon().catch(error => console.error("Failed to fetch Kanto Pokémon:", error));
